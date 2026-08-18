@@ -1,0 +1,24 @@
+.about-mission { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.mission-img { border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-soft); }
+.mission-img img { width: 100%; height: 420px; object-fit: cover; display: block; }
+.values-section { background: linear-gradient(135deg, #2D5016 0%, #3D6B20 100%); }
+.values-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; }
+.value-card { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: var(--radius); padding: 36px 24px; color: #fff; transition: var(--transition); position: relative; overflow: hidden; }
+.value-card:hover { background: rgba(255,255,255,0.14); transform: translateY(-6px); }
+.value-num { font-family: 'Playfair Display',serif; font-size: 3.5rem; font-weight: 700; color: rgba(200,146,58,0.25); position: absolute; top: 16px; right: 20px; line-height: 1; }
+.value-icon { font-size: 2rem; color: var(--gold-light); margin-bottom: 16px; }
+.value-card h3 { font-size: 1.1rem; color: #fff; margin-bottom: 10px; }
+.value-card p  { font-size: 0.88rem; color: rgba(255,255,255,0.65); line-height: 1.65; }
+.team-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 28px; }
+.team-card { overflow: hidden; }
+.team-img-wrap { height: 240px; overflow: hidden; }
+.team-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
+.team-card:hover .team-img-wrap img { transform: scale(1.05); }
+.team-body { padding: 24px; }
+.team-name { font-size: 1.05rem; color: var(--forest); margin-bottom: 4px; }
+.team-role { font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); display: block; margin-bottom: 12px; }
+.team-bio { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
+.team-specialties { display: flex; flex-wrap: wrap; gap: 6px; }
+@media (max-width: 1024px) { .values-grid { grid-template-columns: repeat(2,1fr); } .team-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 768px)  { .about-mission { grid-template-columns: 1fr; } .mission-img { display: none; } }
+@media (max-width: 480px)  { .team-grid { grid-template-columns: 1fr; } }

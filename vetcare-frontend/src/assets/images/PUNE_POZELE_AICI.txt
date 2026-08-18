@@ -1,0 +1,28 @@
+📸 INSTRUCȚIUNI PENTRU IMAGINI
+
+Componentele site-ului folosesc 7 imagini care lipsesc.
+Pune pozele tale cu EXACT aceste denumiri în acest folder:
+
+  • hero-vet.jpg       → folosită pe Home (secțiunea hero)
+  • why-us.jpg         → folosită pe Home (secțiunea "De ce să ne alegi")
+  • about-clinic.jpg   → folosită pe About (clinica/cabinetul)
+  • team-dr1.jpg       → folosită pe About (medic 1)
+  • team-dr2.jpg       → folosită pe About (medic 2)
+  • team-dr3.jpg       → folosită pe About (medic 3)
+  • team-dr4.jpg       → folosită pe About (medic 4)
+
+📐 DIMENSIUNI RECOMANDATE:
+  • hero-vet.jpg, why-us.jpg, about-clinic.jpg → 1200×800 px (orizontale)
+  • team-dr1..4.jpg → 600×800 px (portret)
+
+🎨 SURSE GRATUITE PENTRU POZE STOCK:
+  • https://unsplash.com  — caută: "veterinarian", "vet clinic", "pet doctor"
+  • https://www.pexels.com — la fel
+  • https://www.freepik.com — atenție: unele cer atribuire
+
+🐾 Sfat: pentru pozele de medici, dacă folosești stock, încearcă să fie
+consistente ca stil (ex: toate cu fundal alb, toate profesionale în halat),
+ca să arate uniform pe pagină.
+
+Site-ul funcționează și fără ele (afișează placeholder-uri auto),
+dar arată mult mai bine cu ele.

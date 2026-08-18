@@ -1,0 +1,70 @@
+<div class="page-hero">
+  <div class="container">
+    <span class="section-label">Cine suntem</span>
+    <h1>Despre VetCare</h1>
+    <p>O poveste despre pasiune, dedicare și iubire pentru animale</p>
+  </div>
+</div>
+
+<!-- Misiune -->
+<section class="section">
+  <div class="container">
+    <div class="about-mission">
+      <div class="mission-content fade-up">
+        <span class="section-label">Misiunea noastră</span>
+        <h2 class="section-title">Oferim mai mult decât tratamente —<br>oferim grijă adevărată</h2>
+        <p class="section-desc">Fondată în 2014, VetCare s-a transformat dintr-o clinică mică de cartier într-un centru veterinar de referință în Constanța.</p>
+        <p class="section-desc" style="margin-top:16px">Echipa noastră de medici veterinari cu experiență combinată de peste 40 de ani pune pasiunea față de animale mai presus de orice.</p>
+      </div>
+      <div class="mission-img fade-up fade-up-delay-2">
+        <img src="assets/images/about-clinic.jpg"
+             onerror="this.src='https://placehold.co/520x400/2D5016/FAF7F2?text=Clinica+VetCare'"
+             alt="Clinica VetCare" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Valori -->
+<section class="section values-section">
+  <div class="container">
+    <div class="section-header text-center" style="margin-bottom:56px">
+      <span class="section-label" style="color:var(--gold-light)">Ce ne ghidează</span>
+      <h2 class="section-title" style="color:#fff">Valorile Noastre</h2>
+    </div>
+    <div class="values-grid">
+      <div class="value-card" *ngFor="let v of values; let i = index">
+        <div class="value-num">0{{ i + 1 }}</div>
+        <div class="value-icon"><i [class]="v.icon"></i></div>
+        <h3>{{ v.title }}</h3>
+        <p>{{ v.desc }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Echipa -->
+<section class="section">
+  <div class="container">
+    <div class="section-header text-center" style="margin-bottom:56px">
+      <span class="section-label">Oamenii din spatele VetCare</span>
+      <h2 class="section-title">Echipa Noastră</h2>
+      <p class="section-desc mx-auto">Medici veterinari pasionați, cu formare continuă și inimă mare.</p>
+    </div>
+    <div class="team-grid">
+      <div class="team-card card" *ngFor="let m of team">
+        <div class="team-img-wrap">
+          <img [src]="m.photo" [alt]="m.name" />
+        </div>
+        <div class="team-body">
+          <h3 class="team-name">{{ m.name }}</h3>
+          <span class="team-role">{{ m.role }}</span>
+          <p class="team-bio">{{ m.bio }}</p>
+          <div class="team-specialties">
+            <span class="tag" *ngFor="let s of m.specialties">{{ s }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

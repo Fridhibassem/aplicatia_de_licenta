@@ -1,0 +1,143 @@
+<div class="page-hero">
+  <div class="container">
+    <span class="section-label">Contact</span>
+    <h1>Suntem aici pentru tine</h1>
+    <p>Pentru orice întrebare sau urgență, ne poți contacta direct sau ne poți scrie un mesaj</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="contact-layout">
+
+      <!-- ── Stânga: info ── -->
+      <div class="contact-info">
+        <span class="section-label">Date de contact</span>
+        <h2>Cum ne găsești</h2>
+
+        <div class="info-cards">
+          <div class="info-card">
+            <div class="info-icon" style="background: rgba(45,80,22,0.1); color: var(--forest);">
+              <i class="fa-solid fa-location-dot"></i>
+            </div>
+            <div>
+              <span class="info-label">Adresă</span>
+              <span class="info-value">Str. Animalelor nr. 12<br>București, Sector 1</span>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-icon" style="background: rgba(200,146,58,0.12); color: var(--gold);">
+              <i class="fa-solid fa-phone"></i>
+            </div>
+            <div>
+              <span class="info-label">Telefon</span>
+              <span class="info-value">+40 721 234 567<br>+40 311 234 567</span>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-icon" style="background: rgba(90,138,53,0.15); color: var(--forest-light);">
+              <i class="fa-solid fa-envelope"></i>
+            </div>
+            <div>
+              <span class="info-label">Email</span>
+              <span class="info-value">contact@vetcare.ro<br>urgente@vetcare.ro</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="schedule-box">
+          <h4><i class="fa-solid fa-clock"></i> Program</h4>
+          <ul class="schedule-list">
+            <li><span class="day">Luni - Vineri</span><span class="time">08:00 - 20:00</span></li>
+            <li><span class="day">Sâmbătă</span><span class="time">09:00 - 16:00</span></li>
+            <li><span class="day">Duminică</span><span class="time">Doar urgențe</span></li>
+            <li><span class="day">Urgențe</span><span class="time">24/7</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ── Dreapta: formular ── -->
+      <div class="contact-form-wrap">
+        <div class="form-card">
+          <h2 class="form-title">Trimite-ne un mesaj</h2>
+          <p class="form-subtitle">Îți răspundem în maxim 24 de ore</p>
+
+          <div *ngIf="successMsg" class="success-banner">
+            <i class="fa-solid fa-circle-check"></i>
+            <div>
+              <strong>Mesaj trimis cu succes!</strong>
+              <span>{{ successMsg }}</span>
+            </div>
+          </div>
+
+          <div *ngIf="errorMsg" class="alert alert-error">{{ errorMsg }}</div>
+
+          <form (ngSubmit)="submitForm()" #f="ngForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Prenume *</label>
+                <input type="text" [(ngModel)]="form.firstName" name="firstName" required>
+              </div>
+              <div class="form-group">
+                <label>Nume *</label>
+                <input type="text" [(ngModel)]="form.lastName" name="lastName" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Email *</label>
+                <input type="email" [(ngModel)]="form.email" name="email" required>
+              </div>
+              <div class="form-group">
+                <label>Telefon</label>
+                <input type="tel" [(ngModel)]="form.phone" name="phone">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Tipul animalului</label>
+              <select [(ngModel)]="form.animalType" name="animalType">
+                <option value="">— Selectează —</option>
+                <option>Câine</option>
+                <option>Pisică</option>
+                <option>Iepure</option>
+                <option>Pasăre</option>
+                <option>Reptilă</option>
+                <option>Animal Exotic</option>
+                <option>Altul</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Subiect *</label>
+              <input type="text" [(ngModel)]="form.subject" name="subject"
+                     placeholder="Ex: Întrebare despre vaccinare" required>
+            </div>
+
+            <div class="form-group">
+              <label>Mesaj *</label>
+              <textarea rows="5" [(ngModel)]="form.message" name="message"
+                        placeholder="Descrie în detaliu situația..." required></textarea>
+            </div>
+
+            <div class="form-group form-check">
+              <label>
+                <input type="checkbox" [(ngModel)]="form.agree" name="agree">
+                Sunt de acord cu prelucrarea datelor personale conform politicii de confidențialitate
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" [disabled]="loading">
+              <i class="fa-solid" [ngClass]="loading ? 'fa-circle-notch fa-spin' : 'fa-paper-plane'"></i>
+              {{ loading ? 'Se trimite...' : 'Trimite mesajul' }}
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

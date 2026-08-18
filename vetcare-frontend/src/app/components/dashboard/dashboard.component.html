@@ -1,0 +1,300 @@
+<div class="dashboard">
+
+  <!-- Sidebar -->
+  <aside class="dash-sidebar">
+    <div class="dash-logo">
+      <i class="fa-solid fa-paw"></i>
+      <div>
+        <span class="dash-logo-name">VetCare</span>
+        <span class="dash-logo-sub">Admin Panel</span>
+      </div>
+    </div>
+
+    <nav class="dash-nav">
+      <button class="dash-nav-item" [class.active]="activeTab === 'overview'" (click)="setTab('overview')">
+        <i class="fa-solid fa-chart-pie"></i> Privire de Ansamblu
+      </button>
+      <button class="dash-nav-item" [class.active]="activeTab === 'appointments'" (click)="setTab('appointments')">
+        <i class="fa-solid fa-calendar-check"></i> Programări
+        <span class="dash-badge" *ngIf="stats.pendingAppointments">{{ stats.pendingAppointments }}</span>
+      </button>
+      <button class="dash-nav-item" [class.active]="activeTab === 'users'" (click)="setTab('users')">
+        <i class="fa-solid fa-users"></i> Utilizatori
+      </button>
+      <button class="dash-nav-item" [class.active]="activeTab === 'messages'" (click)="setTab('messages')">
+        <i class="fa-solid fa-envelope"></i> Mesaje
+        <span class="dash-badge" *ngIf="stats.unreadMessages">{{ stats.unreadMessages }}</span>
+      </button>
+    </nav>
+
+    <div class="dash-sidebar-footer">
+      <a routerLink="/" class="dash-nav-item">
+        <i class="fa-solid fa-arrow-left"></i> Înapoi la site
+      </a>
+      <button class="dash-nav-item logout" (click)="logout()">
+        <i class="fa-solid fa-right-from-bracket"></i> Deconectare
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="dash-main">
+
+    <header class="dash-header">
+      <div>
+        <h1>{{
+          activeTab === 'overview' ? 'Privire de Ansamblu' :
+          activeTab === 'appointments' ? 'Programări' :
+          activeTab === 'users' ? 'Utilizatori' : 'Mesaje'
+        }}</h1>
+        <p class="dash-greeting">Bine ai venit, <strong>{{ getCurrentUser()?.name || 'Admin' }}</strong></p>
+      </div>
+      <button class="btn-icon-refresh" (click)="loadAll()" title="Reîmprospătează">
+        <i class="fa-solid fa-arrows-rotate"></i>
+      </button>
+    </header>
+
+    <!-- ── OVERVIEW ── -->
+    <section *ngIf="activeTab === 'overview'" class="dash-content">
+      <div class="stats-grid">
+        <div class="stat-card stat-card-primary">
+          <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+          <div class="stat-body">
+            <span class="stat-label">Total utilizatori</span>
+            <span class="stat-value">{{ stats.totalUsers || 0 }}</span>
+            <span class="stat-meta">{{ stats.totalAdmins || 0 }} admini</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-calendar-check"></i></div>
+          <div class="stat-body">
+            <span class="stat-label">Programări totale</span>
+            <span class="stat-value">{{ stats.totalAppointments || 0 }}</span>
+            <span class="stat-meta">{{ stats.confirmedAppointments || 0 }} confirmate</span>
+          </div>
+        </div>
+
+        <div class="stat-card stat-card-warn">
+          <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
+          <div class="stat-body">
+            <span class="stat-label">În așteptare</span>
+            <span class="stat-value">{{ stats.pendingAppointments || 0 }}</span>
+            <span class="stat-meta">necesită confirmare</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-envelope"></i></div>
+          <div class="stat-body">
+            <span class="stat-label">Mesaje contact</span>
+            <span class="stat-value">{{ stats.totalMessages || 0 }}</span>
+            <span class="stat-meta">{{ stats.unreadMessages || 0 }} necitite</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <h2><i class="fa-solid fa-user-clock"></i> Utilizatori recenți</h2>
+        </div>
+        <div *ngIf="stats.recentUsers?.length" class="recent-users">
+          <div class="recent-user" *ngFor="let u of stats.recentUsers">
+            <div class="recent-avatar">{{ u.name?.[0] || u.email?.[0] || 'U' }}</div>
+            <div class="recent-info">
+              <span class="recent-name">{{ u.name || '—' }}</span>
+              <span class="recent-email">{{ u.email }}</span>
+            </div>
+            <span class="role-badge" [class.admin]="u.role === 'admin'">
+              {{ u.role === 'admin' ? 'Admin' : 'User' }}
+            </span>
+            <span class="recent-date">{{ u.createdAt | date:'dd MMM' }}</span>
+          </div>
+        </div>
+        <div *ngIf="!stats.recentUsers?.length" class="dash-empty">
+          <i class="fa-solid fa-user-slash"></i>
+          <p>Nu există utilizatori încă.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── APPOINTMENTS ── -->
+    <section *ngIf="activeTab === 'appointments'" class="dash-content">
+      <div class="filter-bar">
+        <button class="filter-btn" [class.active]="apptFilter === 'all'" (click)="setApptFilter('all')">
+          Toate ({{ appointments.length }})
+        </button>
+        <button class="filter-btn pending" [class.active]="apptFilter === 'pending'" (click)="setApptFilter('pending')">
+          În așteptare ({{ stats.pendingAppointments || 0 }})
+        </button>
+        <button class="filter-btn confirmed" [class.active]="apptFilter === 'confirmed'" (click)="setApptFilter('confirmed')">
+          Confirmate ({{ stats.confirmedAppointments || 0 }})
+        </button>
+        <button class="filter-btn cancelled" [class.active]="apptFilter === 'cancelled'" (click)="setApptFilter('cancelled')">
+          Anulate ({{ stats.cancelledAppointments || 0 }})
+        </button>
+      </div>
+
+      <div *ngIf="loadingAppts" class="dash-loading">
+        <i class="fa-solid fa-circle-notch fa-spin"></i> Se încarcă...
+      </div>
+
+      <div *ngIf="!loadingAppts && filteredAppointments.length === 0" class="dash-empty">
+        <i class="fa-solid fa-calendar-xmark"></i>
+        <p>Nu există programări în această categorie.</p>
+      </div>
+
+      <div *ngIf="!loadingAppts && filteredAppointments.length > 0" class="dash-table-wrap">
+        <table class="dash-table">
+          <thead>
+            <tr>
+              <th>Data & Ora</th>
+              <th>Client</th>
+              <th>Animal</th>
+              <th>Serviciu</th>
+              <th>Status</th>
+              <th>Acțiuni</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let a of filteredAppointments" [class.row-cancelled]="a.status === 'cancelled'">
+              <td>
+                <div class="td-date">
+                  <strong>{{ a.date | date:'dd MMM yyyy' }}</strong>
+                  <span class="td-sub">{{ a.date | date:'HH:mm' }}</span>
+                </div>
+              </td>
+              <td>
+                <div class="td-user">
+                  <strong>{{ a.user?.name || '—' }}</strong>
+                  <span class="td-sub">{{ a.user?.email || '—' }}</span>
+                </div>
+              </td>
+              <td>{{ a.animalType }}</td>
+              <td>{{ a.service }}</td>
+              <td>
+                <span class="status-pill" [ngClass]="a.status">
+                  {{ getStatusLabel(a.status) }}
+                </span>
+              </td>
+              <td>
+                <div class="td-actions">
+                  <button *ngIf="a.status === 'pending'"
+                          class="btn-action confirm" (click)="confirmAppt(a.id)" title="Confirmă">
+                    <i class="fa-solid fa-check"></i>
+                  </button>
+                  <button *ngIf="a.status !== 'cancelled'"
+                          class="btn-action cancel" (click)="cancelAppt(a.id)" title="Anulează">
+                    <i class="fa-solid fa-ban"></i>
+                  </button>
+                  <button class="btn-action delete" (click)="deleteAppt(a.id)" title="Șterge definitiv">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── USERS ── -->
+    <section *ngIf="activeTab === 'users'" class="dash-content">
+      <div *ngIf="loadingUsers" class="dash-loading">
+        <i class="fa-solid fa-circle-notch fa-spin"></i> Se încarcă...
+      </div>
+
+      <div *ngIf="!loadingUsers && users.length > 0" class="dash-table-wrap">
+        <table class="dash-table">
+          <thead>
+            <tr>
+              <th>Nume</th>
+              <th>Email</th>
+              <th>Rol</th>
+              <th>Înregistrat</th>
+              <th>Acțiuni</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let u of users">
+              <td>
+                <div class="td-user">
+                  <div class="td-avatar">{{ u.name?.[0] || u.email?.[0] || 'U' }}</div>
+                  <strong>{{ u.name || '—' }}</strong>
+                </div>
+              </td>
+              <td>{{ u.email }}</td>
+              <td>
+                <span class="role-badge" [class.admin]="u.role === 'admin'">
+                  {{ u.role === 'admin' ? 'Admin' : 'User' }}
+                </span>
+              </td>
+              <td>{{ u.createdAt | date:'dd MMM yyyy' }}</td>
+              <td>
+                <div class="td-actions">
+                  <button *ngIf="u.role === 'user' && u.id !== getCurrentUser()?.id"
+                          class="btn-action confirm" (click)="makeAdmin(u.id)" title="Promovează la Admin">
+                    <i class="fa-solid fa-arrow-up"></i>
+                  </button>
+                  <button *ngIf="u.role === 'admin' && u.id !== getCurrentUser()?.id"
+                          class="btn-action cancel" (click)="makeUser(u.id)" title="Retrogradează la User">
+                    <i class="fa-solid fa-arrow-down"></i>
+                  </button>
+                  <button *ngIf="u.id !== getCurrentUser()?.id"
+                          class="btn-action delete" (click)="deleteUser(u.id)" title="Șterge user">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                  <span *ngIf="u.id === getCurrentUser()?.id" class="self-tag">tu</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── MESSAGES ── -->
+    <section *ngIf="activeTab === 'messages'" class="dash-content">
+      <div *ngIf="loadingMessages" class="dash-loading">
+        <i class="fa-solid fa-circle-notch fa-spin"></i> Se încarcă...
+      </div>
+
+      <div *ngIf="!loadingMessages && messages.length === 0" class="dash-empty">
+        <i class="fa-solid fa-inbox"></i>
+        <p>Nu există mesaje de contact.</p>
+      </div>
+
+      <div *ngIf="!loadingMessages && messages.length > 0" class="messages-list">
+        <div class="message-card" *ngFor="let m of messages"
+             [class.unread]="!m.read"
+             (click)="toggleRead(m)">
+          <div class="message-header">
+            <div class="message-from">
+              <strong>{{ m.firstName }} {{ m.lastName }}</strong>
+              <span class="msg-email">{{ m.email }}</span>
+              <span class="msg-phone" *ngIf="m.phone"><i class="fa-solid fa-phone"></i> {{ m.phone }}</span>
+            </div>
+            <div class="message-meta">
+              <span class="message-date">{{ m.createdAt | date:'dd MMM yyyy, HH:mm' }}</span>
+              <span class="unread-dot" *ngIf="!m.read"></span>
+            </div>
+          </div>
+          <h3 class="message-subject">{{ m.subject }}</h3>
+          <div class="message-tags" *ngIf="m.animalType">
+            <span class="message-tag"><i class="fa-solid fa-paw"></i> {{ m.animalType }}</span>
+          </div>
+          <p class="message-body">{{ m.message }}</p>
+          <div class="message-actions">
+            <a [href]="'mailto:' + m.email" class="btn btn-outline btn-sm" (click)="$event.stopPropagation()">
+              <i class="fa-solid fa-reply"></i> Răspunde
+            </a>
+            <button class="btn-action delete" (click)="$event.stopPropagation(); deleteMessage(m.id)" title="Șterge">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>

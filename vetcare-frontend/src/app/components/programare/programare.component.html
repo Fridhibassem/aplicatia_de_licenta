@@ -1,0 +1,121 @@
+<div class="page-hero">
+  <div class="container">
+    <span class="section-label">Rezervă o vizită</span>
+    <h1>Programare Online</h1>
+    <p>Alege data și ora care îți convine</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+
+    <!-- Success -->
+    <div class="success-card" *ngIf="submitted">
+      <i class="fa-solid fa-circle-check"></i>
+      <h2>Programare confirmată!</h2>
+      <p>Te vom contacta pentru confirmare. Ne vedem curând! 🐾</p>
+      <a routerLink="/" class="btn btn-primary">Înapoi Acasă</a>
+    </div>
+
+    <div class="programare-layout" *ngIf="!submitted">
+
+      <!-- Calendar -->
+      <div class="calendar-section">
+        <div class="calendar-card">
+          <div class="cal-header">
+            <button class="cal-nav" (click)="prevMonth()"><i class="fa-solid fa-chevron-left"></i></button>
+            <h3>{{ getMonthName() }}</h3>
+            <button class="cal-nav" (click)="nextMonth()"><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+
+          <div class="cal-weekdays">
+            <span>Lun</span><span>Mar</span><span>Mie</span>
+            <span>Joi</span><span>Vin</span>
+            <span class="weekend">Sâm</span><span class="weekend">Dum</span>
+          </div>
+
+          <div class="cal-grid">
+            <div *ngFor="let day of calendarDays"
+                 class="cal-day"
+                 [class.empty]="!day"
+                 [class.past]="day?.isPast"
+                 [class.weekend]="day?.isWeekend"
+                 [class.today]="day?.isToday"
+                 [class.selected]="selectedDate && day?.date?.toDateString() === selectedDate.toDateString()"
+                 (click)="selectDate(day)">
+              {{ day?.day }}
+            </div>
+          </div>
+
+          <div class="cal-legend">
+            <span><span class="dot available"></span> Disponibil</span>
+            <span><span class="dot selected"></span> Selectat</span>
+            <span><span class="dot unavailable"></span> Indisponibil</span>
+          </div>
+        </div>
+
+        <!-- Hours -->
+        <div class="hours-card" *ngIf="selectedDate">
+          <h3><i class="fa-regular fa-clock"></i> Ore disponibile</h3>
+          <p class="selected-date-label">{{ selectedDate | date:'EEEE, d MMMM yyyy':'':'ro' }}</p>
+          <div class="hours-grid">
+            <button *ngFor="let hour of hours"
+                    class="hour-btn"
+                    [class.occupied]="isOccupied(hour)"
+                    [class.selected]="selectedHour === hour"
+                    [disabled]="isOccupied(hour)"
+                    (click)="selectHour(hour)">
+              {{ hour }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="form-section">
+        <div class="form-card card">
+          <h3 class="form-title">Detalii Programare</h3>
+
+          <div class="selected-summary" *ngIf="selectedDate && selectedHour">
+            <i class="fa-solid fa-calendar-check"></i>
+            <span>{{ selectedDate | date:'dd/MM/yyyy' }} la {{ selectedHour }}</span>
+          </div>
+
+          <div class="form-group">
+            <label>Tipul animalului *</label>
+            <select [(ngModel)]="form.animalType" name="animalType">
+              <option value="">Selectează</option>
+              <option *ngFor="let a of animalTypes" [value]="a">{{ a }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Serviciu dorit *</label>
+            <select [(ngModel)]="form.service" name="service">
+              <option value="">Selectează serviciul</option>
+              <option *ngFor="let s of services" [value]="s">{{ s }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Mesaj opțional</label>
+            <textarea [(ngModel)]="form.message" name="message"
+                      placeholder="Descrie problema sau întrebarea ta..."></textarea>
+          </div>
+
+          <div class="error-msg" *ngIf="error">
+            <i class="fa-solid fa-triangle-exclamation"></i> {{ error }}
+          </div>
+
+          <button class="btn btn-primary submit-btn"
+                  (click)="submit()"
+                  [disabled]="loading">
+            <i class="fa-solid fa-calendar-plus"></i>
+            {{ loading ? 'Se trimite...' : 'Confirmă Programarea' }}
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

@@ -1,0 +1,136 @@
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-bg-decor"></div>
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-content fade-up">
+        <span class="section-label">🐾 Cabinet Veterinar în Constanța</span>
+        <h1 class="hero-title">
+          Îngrijire cu drag<br>
+          <em>pentru animăluțele tale</em>
+        </h1>
+        <p class="hero-desc">
+          Oferim servicii veterinare complete — de la consultații de rutină și vaccinări,
+          până la intervenții chirurgicale și tratamente specializate.
+        </p>
+        <div class="hero-actions">
+          <a routerLink="/contact" class="btn btn-primary">
+            <i class="fa-solid fa-calendar-check"></i> Programare Online
+          </a>
+          <a routerLink="/about" class="btn btn-outline-white">
+            <i class="fa-solid fa-circle-play"></i> Despre Noi
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat" *ngFor="let s of stats">
+            <span class="stat-number">{{ s.value }}</span>
+            <span class="stat-label">{{ s.label }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-image-wrap fade-up fade-up-delay-2">
+        <div class="hero-img-card">
+          <img src="assets/images/hero-vet.jpg"
+               onerror="this.src='https://placehold.co/560x480/2D5016/FAF7F2?text=VetCare'"
+               alt="Veterinar cu animal" />
+          <div class="hero-badge">
+            <i class="fa-solid fa-shield-heart"></i>
+            <div>
+              <strong>Urgențe 24/7</strong>
+              <span>+40 241 000 000</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-blob"></div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-wave">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none"><path d="M0,0 C360,80 1080,0 1440,60 L1440,80 L0,80 Z" fill="#FAF7F2"/></svg>
+  </div>
+</section>
+
+<!-- ── SERVICII ── -->
+<section class="section">
+  <div class="container">
+    <div class="section-header text-center">
+      <span class="section-label">Ce oferim</span>
+      <h2 class="section-title">Serviciile Noastre</h2>
+      <p class="section-desc mx-auto">De la prevenție la tratament, acoperim toate nevoile animalului tău de companie.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card card" *ngFor="let s of services">
+        <div class="service-icon-wrap" [style.background]="s.color">
+          <i [class]="s.icon"></i>
+        </div>
+        <h3 class="service-title">{{ s.title }}</h3>
+        <p class="service-desc">{{ s.desc }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DE CE NOI ── -->
+<section class="section why-section">
+  <div class="container">
+    <div class="why-inner">
+      <div class="why-image">
+        <img src="assets/images/why-us.jpg"
+             onerror="this.src='https://placehold.co/520x420/5A8A35/FAF7F2?text=Echipa+Noastra'"
+             alt="Echipa VetCare" />
+      </div>
+      <div class="why-content">
+        <span class="section-label">De ce să ne alegi</span>
+        <h2 class="section-title">O echipă dedicată sănătății animalelor tale</h2>
+        <p class="section-desc">Cu peste 10 ani de experiență, echipa noastră combină tehnologie modernă cu o abordare blândă și empatică.</p>
+        <ul class="why-list">
+          <li *ngFor="let w of whyUs">
+            <div class="why-check"><i class="fa-solid fa-check"></i></div>
+            <div><strong>{{ w.title }}</strong><span>{{ w.desc }}</span></div>
+          </li>
+        </ul>
+        <a routerLink="/about" class="btn btn-primary" style="margin-top:32px;">
+          <i class="fa-solid fa-arrow-right"></i> Află mai multe
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TESTIMONIALE ── -->
+<section class="section">
+  <div class="container">
+    <div class="section-header text-center">
+      <span class="section-label">Ce spun clienții</span>
+      <h2 class="section-title">Părinți fericiți de animale</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card card" *ngFor="let t of testimonials">
+        <div class="testimonial-stars">
+          <i class="fa-solid fa-star" *ngFor="let i of stars"></i>
+        </div>
+        <p class="testimonial-text">"{{ t.text }}"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">{{ t.name[0] }}</div>
+          <div><strong>{{ t.name }}</strong><span>{{ t.pet }}</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="cta-banner">
+  <div class="container">
+    <div class="cta-inner">
+      <div>
+        <h2>Programează o consultație astăzi!</h2>
+        <p>Sănătatea animalului tău nu poate aștepta. Contactează-ne acum.</p>
+      </div>
+      <div class="cta-actions">
+        <a routerLink="/contact" class="btn btn-gold"><i class="fa-solid fa-calendar-plus"></i> Programare Online</a>
+        <a href="tel:+40241000000" class="btn btn-outline-white"><i class="fa-solid fa-phone"></i> Sună Acum</a>
+      </div>
+    </div>
+  </div>
+</section>

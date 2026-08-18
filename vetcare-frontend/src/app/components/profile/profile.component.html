@@ -1,0 +1,194 @@
+<div class="page-hero">
+  <div class="container">
+    <span class="section-label">Contul tău</span>
+    <h1>Profilul Meu</h1>
+    <p>Gestionează datele și programările tale</p>
+  </div>
+</div>
+
+<section class="section profile-section">
+  <div class="container">
+    <div class="profile-layout">
+
+      <!-- Sidebar -->
+      <aside class="profile-sidebar">
+        <div class="profile-card-user">
+          <div class="profile-avatar">{{ user?.name?.[0] || user?.email?.[0] || 'U' }}</div>
+          <h3>{{ user?.name || 'Utilizator' }}</h3>
+          <span class="profile-email">{{ user?.email }}</span>
+          <span class="profile-role-badge" [class.admin]="user?.role === 'admin'">
+            <i class="fa-solid" [ngClass]="user?.role === 'admin' ? 'fa-crown' : 'fa-user'"></i>
+            {{ user?.role === 'admin' ? 'Administrator' : 'Utilizator' }}
+          </span>
+        </div>
+
+        <nav class="profile-nav">
+          <button class="profile-nav-item" [class.active]="activeTab === 'info'" (click)="setTab('info')">
+            <i class="fa-solid fa-circle-info"></i> Informații
+          </button>
+          <button class="profile-nav-item" [class.active]="activeTab === 'appointments'" (click)="setTab('appointments')">
+            <i class="fa-solid fa-calendar-check"></i> Programările Mele
+            <span class="nav-count" *ngIf="appointments.length">{{ appointments.length }}</span>
+          </button>
+          <button class="profile-nav-item" [class.active]="activeTab === 'security'" (click)="setTab('security')">
+            <i class="fa-solid fa-shield-halved"></i> Securitate
+          </button>
+          <a class="profile-nav-item" routerLink="/programare">
+            <i class="fa-solid fa-plus"></i> Programare Nouă
+          </a>
+          <a class="profile-nav-item" *ngIf="user?.role === 'admin'" routerLink="/dashboard">
+            <i class="fa-solid fa-chart-pie"></i> Dashboard Admin
+          </a>
+          <button class="profile-nav-item logout" (click)="logout()">
+            <i class="fa-solid fa-right-from-bracket"></i> Deconectare
+          </button>
+        </nav>
+      </aside>
+
+      <!-- Main content -->
+      <div class="profile-main">
+
+        <!-- TAB: Info -->
+        <div *ngIf="activeTab === 'info'" class="profile-tab">
+          <div class="profile-tab-header">
+            <h2>Informații Personale</h2>
+            <p>Detaliile contului tău VetCare</p>
+          </div>
+
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Nume</span>
+              <div class="info-value-row" *ngIf="!editingName">
+                <span class="info-value">{{ user?.name || '—' }}</span>
+                <button class="btn-edit" (click)="startEditName()">
+                  <i class="fa-solid fa-pen"></i> Editează
+                </button>
+              </div>
+              <div class="info-edit" *ngIf="editingName">
+                <input type="text" [(ngModel)]="nameForm" placeholder="Numele tău" />
+                <div class="info-edit-actions">
+                  <button class="btn btn-primary btn-sm" (click)="saveName()" [disabled]="nameLoading">
+                    {{ nameLoading ? 'Se salvează...' : 'Salvează' }}
+                  </button>
+                  <button class="btn btn-outline btn-sm" (click)="cancelEditName()">Anulează</button>
+                </div>
+                <div class="alert alert-error" *ngIf="nameError">{{ nameError }}</div>
+              </div>
+              <div class="alert alert-success" *ngIf="nameSuccess">{{ nameSuccess }}</div>
+            </div>
+
+            <div class="info-item">
+              <span class="info-label">Email</span>
+              <span class="info-value">{{ user?.email }}</span>
+              <span class="info-hint">Email-ul nu poate fi modificat.</span>
+            </div>
+
+            <div class="info-item">
+              <span class="info-label">Rol</span>
+              <span class="info-value">{{ user?.role === 'admin' ? 'Administrator' : 'Utilizator' }}</span>
+            </div>
+
+            <div class="info-item" *ngIf="user?.createdAt">
+              <span class="info-label">Membru din</span>
+              <span class="info-value">{{ user.createdAt | date:'dd MMMM yyyy' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: Appointments -->
+        <div *ngIf="activeTab === 'appointments'" class="profile-tab">
+          <div class="profile-tab-header">
+            <h2>Programările Mele</h2>
+            <p>Istoricul și programările viitoare</p>
+          </div>
+
+          <div *ngIf="loading" class="loading">
+            <i class="fa-solid fa-circle-notch fa-spin"></i> Se încarcă...
+          </div>
+
+          <div *ngIf="!loading && appointments.length === 0" class="empty-state">
+            <i class="fa-solid fa-calendar-xmark"></i>
+            <h3>Nu ai nicio programare încă</h3>
+            <p>Programează o consultație pentru animalul tău acum.</p>
+            <a routerLink="/programare" class="btn btn-primary">
+              <i class="fa-solid fa-plus"></i> Fă o programare
+            </a>
+          </div>
+
+          <div *ngIf="!loading && appointments.length > 0" class="appointments-list">
+            <div class="appointment-card" *ngFor="let a of appointments"
+                 [class.past]="isPast(a.date)"
+                 [class.cancelled]="a.status === 'cancelled'">
+              <div class="appointment-date">
+                <span class="day">{{ a.date | date:'dd' }}</span>
+                <span class="month">{{ a.date | date:'MMM' }}</span>
+                <span class="year">{{ a.date | date:'yyyy' }}</span>
+              </div>
+              <div class="appointment-body">
+                <div class="appointment-top">
+                  <h3>{{ a.service }}</h3>
+                  <span class="status-badge" [ngClass]="a.status">
+                    <i class="fa-solid"
+                       [ngClass]="{
+                         'fa-clock': a.status === 'pending',
+                         'fa-check': a.status === 'confirmed',
+                         'fa-xmark': a.status === 'cancelled'
+                       }"></i>
+                    {{ getStatusLabel(a.status) }}
+                  </span>
+                </div>
+                <div class="appointment-meta">
+                  <span><i class="fa-solid fa-clock"></i> {{ a.date | date:'HH:mm' }}</span>
+                  <span><i class="fa-solid fa-paw"></i> {{ a.animalType }}</span>
+                </div>
+                <p class="appointment-msg" *ngIf="a.message">"{{ a.message }}"</p>
+              </div>
+              <div class="appointment-actions">
+                <button class="btn btn-outline btn-sm"
+                        *ngIf="isCancellable(a)"
+                        (click)="cancelAppointment(a.id)">
+                  <i class="fa-solid fa-xmark"></i> Anulează
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: Security -->
+        <div *ngIf="activeTab === 'security'" class="profile-tab">
+          <div class="profile-tab-header">
+            <h2>Securitate</h2>
+            <p>Schimbă parola contului tău</p>
+          </div>
+
+          <form class="security-form" (ngSubmit)="changePassword()" #f="ngForm">
+            <div class="form-group">
+              <label>Parola curentă</label>
+              <input type="password" [(ngModel)]="pwForm.current" name="current"
+                     placeholder="••••••••" autocomplete="current-password" />
+            </div>
+            <div class="form-group">
+              <label>Parolă nouă</label>
+              <input type="password" [(ngModel)]="pwForm.new" name="new"
+                     placeholder="Minim 8 caractere" autocomplete="new-password" />
+            </div>
+            <div class="form-group">
+              <label>Confirmă parola nouă</label>
+              <input type="password" [(ngModel)]="pwForm.confirm" name="confirm"
+                     placeholder="••••••••" autocomplete="new-password" />
+            </div>
+
+            <div class="alert alert-error" *ngIf="pwError">{{ pwError }}</div>
+            <div class="alert alert-success" *ngIf="pwSuccess">{{ pwSuccess }}</div>
+
+            <button type="submit" class="btn btn-primary" [disabled]="pwLoading">
+              <i class="fa-solid fa-key"></i>
+              {{ pwLoading ? 'Se schimbă...' : 'Schimbă parola' }}
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>

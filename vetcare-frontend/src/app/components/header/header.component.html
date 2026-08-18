@@ -1,0 +1,62 @@
+<header class="site-header" [class.scrolled]="scrolled" [class.menu-open]="menuOpen">
+  <div class="header-inner container">
+
+    <a routerLink="/" class="logo" (click)="closeMenu()">
+      <div class="logo-icon"><i class="fa-solid fa-paw"></i></div>
+      <div class="logo-text">
+        <span class="logo-name">VetCare</span>
+        <span class="logo-sub">Cabinet Veterinar</span>
+      </div>
+    </a>
+
+    <nav class="nav-desktop">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="nav-link">
+        <i class="fa-solid fa-house-chimney"></i> Acasă
+      </a>
+      <a routerLink="/about" routerLinkActive="active" class="nav-link">
+        <i class="fa-solid fa-circle-info"></i> Despre Noi
+      </a>
+      <a routerLink="/contact" routerLinkActive="active" class="nav-link">
+        <i class="fa-solid fa-envelope"></i> Contact
+      </a>
+      <a routerLink="/programare" routerLinkActive="active" class="nav-link">
+        <i class="fa-solid fa-calendar-plus"></i> Programare
+      </a>
+
+      <ng-container *ngIf="!isLoggedIn()">
+        <a routerLink="/login" class="btn btn-primary nav-cta">
+          <i class="fa-solid fa-user"></i> Contul Meu
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf="isLoggedIn()">
+        <a routerLink="/dashboard" *ngIf="isAdmin()" class="btn btn-outline nav-cta">
+          <i class="fa-solid fa-chart-pie"></i> Dashboard
+        </a>
+        <button class="btn btn-primary nav-cta" (click)="logout()">
+          <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </button>
+      </ng-container>
+    </nav>
+
+    <button class="hamburger" (click)="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <div class="mobile-nav" [class.open]="menuOpen">
+    <a routerLink="/" class="mob-link" (click)="closeMenu()"><i class="fa-solid fa-house-chimney"></i> Acasă</a>
+    <a routerLink="/about" class="mob-link" (click)="closeMenu()"><i class="fa-solid fa-circle-info"></i> Despre Noi</a>
+    <a routerLink="/contact" class="mob-link" (click)="closeMenu()"><i class="fa-solid fa-envelope"></i> Contact</a>
+    <a routerLink="/programare" class="mob-link" (click)="closeMenu()"><i class="fa-solid fa-calendar-plus"></i> Programare</a>
+    <ng-container *ngIf="!isLoggedIn()">
+      <a routerLink="/login" class="mob-link cta" (click)="closeMenu()"><i class="fa-solid fa-user"></i> Contul Meu</a>
+    </ng-container>
+    <ng-container *ngIf="isLoggedIn()">
+      <a routerLink="/dashboard" *ngIf="isAdmin()" class="mob-link" (click)="closeMenu()"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+      <button class="mob-link cta" (click)="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+    </ng-container>
+  </div>
+
+  <div class="nav-overlay" *ngIf="menuOpen" (click)="closeMenu()"></div>
+</header>
