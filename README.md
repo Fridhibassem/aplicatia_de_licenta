@@ -127,16 +127,6 @@ Aplicatia se deschide in browser la:
 http://localhost:4200
 ```
 
-## Conturi demo
-
-Daca se ruleaza comanda `npm run seed`, se creeaza cateva conturi pentru test:
-
-| Email | Parola | Rol |
-| --- | --- | --- |
-| admin@vetcare.ro | Admin123 | admin |
-| user@vetcare.ro | User1234 | user |
-| demo@vetcare.ro | Demo1234 | user |
-
 ## Observatii
 
 Proiectul a fost realizat ca aplicatie de licenta si pune accent pe organizarea unei aplicatii full-stack: frontend separat, backend separat, baza de date relationala si autentificare cu roluri.
